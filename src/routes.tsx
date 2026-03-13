@@ -1,16 +1,20 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Dashboard } from "./pages/auth/app/dashboard";
+
 
 import { AppLayout } from "./pages/auth/_layouts/app";
 import { AuthLayout } from "./pages/auth/_layouts/auth";
 import { SignIn } from "./pages/auth/app/auth/sign-in";
 import { SignUp } from "./pages/auth/app/auth/sign-up";
 import { Orders } from "./pages/auth/app/orders/orders";
+import { Dashboard } from "./pages/auth/app/dashboard/dashboard";
+import { NotFound } from "./pages/404";
+import { Error } from "./pages/error";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <AppLayout />,
+    errorElement: <Error />,
     children: [
       { path: "/", element: <Dashboard /> },
 
@@ -25,4 +29,8 @@ export const router = createBrowserRouter([
       { path: "/sign-up", element: <SignUp /> },
     ],
   },
-]);
+  {
+    path: "*",
+    element: <NotFound />
+  },
+])

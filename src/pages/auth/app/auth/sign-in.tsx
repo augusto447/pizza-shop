@@ -6,7 +6,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { toast } from "sonner";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { SignInRequest } from "@/api/sign-in";
+
 
 const SignInForm = z.object({
   email: z.string().email(),
@@ -15,17 +18,38 @@ const SignInForm = z.object({
 type SignFormData = z.infer<typeof SignInForm>;
 
 export function SignIn() {
+
+  const [searchParams] = useSearchParams()
+
+
+
+
+
+
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm<SignFormData>();
+  } = useForm<SignFormData>(
+    {
+      defaultValues: {
+        email: searchParams.get("email") ?? "",
+
+      }
+
+    }
+  );
+
+  const { mutateAsync: authenticate } = useMutation({
+    mutationFn: SignInRequest,
+  })
+
 
   async function handleSignIn(data: SignFormData) {
     try {
-      console.log(data);
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      await authenticate({ email: data.email })
 
       toast.success("Enviamos um link de autenticação para seu e-mail.", {
         action: {
